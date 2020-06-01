@@ -20,8 +20,8 @@ const schema = new Schema({
     },
     role: {
         type: String,
-        enum: ['ADMINISTRATOR', 'AUTHOR'],
-        default: 'AUTHOR',
+        enum: ['ADMINISTRATOR', 'USER'],
+        default: 'USER',
         required: true,
     },
     email: {

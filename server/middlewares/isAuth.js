@@ -3,9 +3,9 @@ const jwt = require('jsonwebtoken')
 const isAuth = (req, res, next) => {
     const access = req.headers['x-access-token']
 
-    if (access === undefined || access === '') {
+    if (!access) {
         return res.status(422).json({
-            errors: ['Token no encontrado']
+            errors: ['Token not found']
         })
     }
 
@@ -23,6 +23,4 @@ const isAuth = (req, res, next) => {
     })
 }
 
-module.exports = {
-    isAuth
-}
+module.exports = isAuth

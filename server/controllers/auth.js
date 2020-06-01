@@ -1,5 +1,5 @@
-const User = require('../models/User')
 const jwt = require('jsonwebtoken')
+const User = require('../models/User')
 const { errorMessages } = require('../utils/errorsHandlers')
 
 const login = async (req, res) => {
@@ -17,22 +17,23 @@ const login = async (req, res) => {
     try {
         const user = await User.findOne({email})
         if (!user) {
-            return res.status(400).json({
-                errors: ['Correo o contraseña incorrecta']
+            return res.status(404).json({
+                errors: ['Incorrect email or password']
             })
         }
         if (!user.verifyPassword(password)) {
-            return res.status(400).json({
-                errors: ['Correo o contraseña incorrecta']
+            return res.status(404).json({
+                errors: ['Incorrect email or password']
             })
         }
         const token = jwt.sign({
             _id: user._id,
-            role: user.role
-        }, 
+            role: user.role,
+            nickname: user.nickname
+        },
         process.env.SECRET_KEY, {expiresIn: 60 * 60 * 7})
         res.json({
-            message: 'Inicio de sesión exitosa',
+            message: 'Login successful',
             token
         })
     } catch (error) {
@@ -63,7 +64,7 @@ const register = async (req, res) => {
 
         if (user) {
             return res.status(400).json({
-                errors: ['Correo ya fue registrado']
+                errors: ['Mail has already been registered']
             })
         }
 
@@ -75,7 +76,7 @@ const register = async (req, res) => {
         })
 
         res.status(201).json({
-            message: 'Usuario registrado correctamente'
+            message: 'Registered user successfully'
         })
     } catch (error) {
         res.status(500).json({
@@ -93,12 +94,12 @@ const checkEmail = async (req, res) => {
 
         if (user) {
             return res.json({
-                resp: false
+                message: 'notAvailable'
             })
         }
 
         res.json({
-            resp: true
+            message: 'available'
         })
     } catch (error) {
         res.status(500).json({
@@ -112,7 +113,7 @@ const verifyToken = (req, res) => {
 
     if (!access || access === 'Bearer ')
         return res.status(400).json({
-            errors: ['Token es requerido']
+            errors: ['Token is required']
         })
     const token = access.split(' ', -1)[1]
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
@@ -123,14 +124,10 @@ const verifyToken = (req, res) => {
         }
 
         res.json({
-            message: 'token valido'
+            message: 'Valid token'
         })
     })
 }
-
-// const resetPassword = (req, res) => {
-    
-// }
 
 module.exports = {
     login,

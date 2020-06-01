@@ -1,28 +1,27 @@
 const { Router } = require('express')
-const userController = require('../controllers/user')
+const authController = require('../controllers/auth')
 const { check } = require('express-validator')
 
 
 const router = Router()
 
 router.post('/login', [
-    check('email', 'El correo electrónico es requerido').notEmpty(),
-    check('email', 'El formato de correo electrónico es invalido').isEmail(),
-    check('password', 'La contraseña es requerida').notEmpty(),
-    check('password', 'La contraseña debe tener minimo 8 caracteres').isLength({min: 8})
-],userController.login)
+    check('email', 'Email is required').notEmpty(),
+    check('email', 'Email format is invalid').isEmail(),
+    check('password', 'Password is required').notEmpty()
+], authController.login)
 
 router.post('/register', [
-    check('fullname', 'El nombre completo es requerido').notEmpty(),
-    check('nickname', 'El nombre de usuario es requerido').notEmpty(),
-    check('email', 'El correo electrónico es requerido').notEmpty(),
-    check('email', 'El formato de correo electrónico es invalido').isEmail(),
-    check('password', 'La contraseña es requerida').notEmpty(),
-    check('password', 'La contraseña debe tener minimo 8 caracteres').isLength({min: 8})
-],userController.register)
+    check('fullname', 'Full name is required').notEmpty(),
+    check('nickname', 'Username is required').notEmpty(),
+    check('email', 'Email is required').notEmpty(),
+    check('email', 'Email format is invalid').isEmail(),
+    check('password', 'Password is required').notEmpty(),
+    check('password', 'Password must have a minimum of 9 characters').isLength({min: 9})
+], authController.register)
 
-router.get('/verify-token', userController.verifyToken)
+router.get('/verify-token', authController.verifyToken)
 
-router.post('/check-email', userController.checkEmail)
+router.post('/check-email', authController.checkEmail)
 
 module.exports = router
