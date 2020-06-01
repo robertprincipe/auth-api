@@ -3,9 +3,10 @@ const cors = require('cors')
 const morgan = require('morgan')
 require('dotenv').config()
 const dbConnection = require('./config/database')
+const seeder = require('./seeds')
 const app = express()
 dbConnection()
-
+seeder()
 
 app.use(morgan('dev'))
 app.use(cors())
